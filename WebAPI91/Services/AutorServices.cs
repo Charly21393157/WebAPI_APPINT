@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Domain.DTO;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -20,9 +21,25 @@ namespace WebAPI_APPINT.Services
             try
             {
                 List<Autor> response = new List<Autor>();
-                var result = await _context.Database.GetDbConnection().QueryAsync<Autor>("spGetAutores", new(), commandType: CommandType.StoredProcedure);
+                var result = await _context.Database.GetDbConnection().QueryAsync<Autor>("SpGetAutores", new(), commandType: CommandType.StoredProcedure);
                 response = result.ToList();
                 return new Response<List<Autor>> ( response );
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Sucedio un Error :c" + ex.Message);
+            }
+        }
+
+        public async Task<Response<Autor>> Crear(AutorResponsive i)
+        {
+            try
+            {
+                Autor result = new Autor();
+
+                result = (await _context.Database.GetDbConnection().QueryAsync<Autor>("SpCrearAutor", new { i.Nombre, i.Nacionalidad }, commandType: CommandType.StoredProcedure)).FirstOrDefault();
+                
+                return new Response<Autor> ( result );
             }
             catch (Exception ex)
             {

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain.DTO;
+using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
+
 using WebAPI_APPINT.Services.Interfaces;
 
 namespace WebAPI_APPINT.Controllers
@@ -17,6 +20,13 @@ namespace WebAPI_APPINT.Controllers
         public async Task<IActionResult> GetAutores()
         {
             var result = await _autorServices.GetAutores();
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CrearAutor([FromBody] AutorResponsive request)
+        {
+            var result = await _autorServices.Crear(request);
             return Ok(result);
         }
     }
